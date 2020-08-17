@@ -20,6 +20,8 @@ var (
 	})
 )
 
+type AfterExecuteCallBack func()
+
 // NewGruleEngine will create new instance of GruleEngine struct.
 // It will set the max cycle to 5000
 func NewGruleEngine() *GruleEngine {
@@ -34,14 +36,14 @@ type GruleEngine struct {
 }
 
 // Execute function is the same as ExecuteWithContext(context.Background())
-func (g *GruleEngine) Execute(dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase) error {
-	return g.ExecuteWithContext(context.Background(), dataCtx, knowledge)
+func (g *GruleEngine) Execute(dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack ...AfterExecuteCallBack) error {
+	return g.ExecuteWithContext(context.Background(), dataCtx, knowledge, afterExecuteCallBack...)
 }
 
 // ExecuteWithContext function will execute a knowledge evaluation and action against data context.
 // The engine will evaluate context cancelation status in each cycle.
 // The engine also do conflict resolution of which rule to execute.
-func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase) error {
+func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack ...AfterExecuteCallBack) error {
 	RuleEnginePublisher := eventbus.DefaultBrooker.GetPublisher(events.RuleEngineEventTopic)
 	RuleEntryPublisher := eventbus.DefaultBrooker.GetPublisher(events.RuleEntryEventTopic)
 
@@ -168,13 +170,14 @@ func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataC
 					log.Errorf("Failed execution rule : %s. Got error %v", r.Name, err)
 					return err
 				}
-
 				// emit rule execute end event
 				RuleEntryPublisher.Publish(&events.RuleEntryEvent{
 					EventType: events.RuleEntryExecuteEndEvent,
 					RuleName:  r.Name,
 				})
-
+				for _, f := range afterExecuteCallBack {
+					f()
+				}
 				if dataCtx.IsComplete() {
 					cycleDone = true
 					break
