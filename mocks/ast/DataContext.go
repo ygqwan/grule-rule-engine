@@ -224,3 +224,11 @@ func (mr *MockIDataContextMockRecorder) IsComplete() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsComplete", reflect.TypeOf((*MockIDataContext)(nil).IsComplete))
 }
+
+
+func (ctx *DataContext) ResetAllFiledZero() {
+	ctx.complete = false
+	ctx.ObjectStore = nil
+	ctx.retracted = nil
+	ctx.variableChangeCount = 0
+}

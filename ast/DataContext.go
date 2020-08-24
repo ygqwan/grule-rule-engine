@@ -60,6 +60,9 @@ type IDataContext interface {
 
 	GetValue(variable string) (reflect.Value, error)
 	SetValue(variable string, newValue reflect.Value) error
+
+	//only when the data ctx useless, will free for gc optimize
+	ResetAllFiledZero()
 }
 
 // ResetVariableChangeCount will reset the variable change count
@@ -167,6 +170,13 @@ func (ctx *DataContext) SetValue(variable string, newValue reflect.Value) error 
 		return fmt.Errorf("fact is retracted")
 	}
 	return fmt.Errorf("fact [%s] not found while setting value", varArray[0])
+}
+
+func (ctx *DataContext) ResetAllFiledZero() {
+	ctx.complete = false
+	ctx.ObjectStore = nil
+	ctx.retracted = nil
+	ctx.variableChangeCount = 0
 }
 
 func traceType(obj interface{}, path []string) (reflect.Type, error) {
