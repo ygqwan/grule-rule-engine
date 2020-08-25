@@ -174,8 +174,8 @@ func (ctx *DataContext) SetValue(variable string, newValue reflect.Value) error 
 
 func (ctx *DataContext) ResetAllFiledZero() {
 	ctx.complete = false
-	ctx.ObjectStore = nil
-	ctx.retracted = nil
+	ctx.ObjectStore = make(map[string]interface{})
+	ctx.retracted = make([]string, 0)
 	ctx.variableChangeCount = 0
 }
 
