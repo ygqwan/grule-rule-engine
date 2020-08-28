@@ -41,7 +41,7 @@ func Benchmark_Grule_Execution_Engine(b *testing.B) {
 					if err != nil {
 						b.Fail()
 					}
-					err = e.Execute(dataCtx, knowledgeBase)
+					err = e.Execute(dataCtx, knowledgeBase, nil, nil)
 					if err != nil {
 						fmt.Print(err)
 					}

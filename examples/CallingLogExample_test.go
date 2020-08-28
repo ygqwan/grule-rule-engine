@@ -35,7 +35,7 @@ func TestCallingLog(t *testing.T) {
 		knowledgeBase := lib.NewKnowledgeBaseInstance("CallingLog", "0.1.1")
 
 		eng1 := &engine.GruleEngine{MaxCycle: 1}
-		err := eng1.Execute(dataContext, knowledgeBase)
+		err := eng1.Execute(dataContext, knowledgeBase, nil, nil)
 		if err != nil {
 			t.Fatalf("Got error %v", err)
 		}

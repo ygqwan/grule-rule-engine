@@ -121,7 +121,7 @@ func (cf *CashFlowCalculator) CalculatePurchases() {
 		dctx := ast.NewDataContext()
 		dctx.Add("CashFlow", cashFlow)
 		dctx.Add("Purchase", purchase)
-		err = engine.Execute(dctx, kb)
+		err = engine.Execute(dctx, kb, nil, nil)
 		if err != nil {
 			panic(err)
 		}

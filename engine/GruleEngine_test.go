@@ -120,7 +120,7 @@ func TestGrule_Execute(t *testing.T) {
 		engine := NewGruleEngine()
 		kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 		start := time.Now()
-		err = engine.Execute(dctx, kb)
+		err = engine.Execute(dctx, kb, nil, nil)
 		if err != nil {
 			t.Errorf("Got error : %v", err)
 			t.FailNow()
@@ -201,7 +201,7 @@ func TestGrule_ExecuteWithSubscribers(t *testing.T) {
 		engine := NewGruleEngine()
 		kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 		start := time.Now()
-		err = engine.Execute(dctx, kb)
+		err = engine.Execute(dctx, kb, nil, nil)
 		if err != nil {
 			t.Errorf("Got error : %v", err)
 			t.FailNow()
@@ -271,7 +271,7 @@ func TestEngine_ComplexRule1(t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.Equal(t, int64(1), ts.Result)
@@ -308,7 +308,7 @@ func TestEngine_ComplexRule2(t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.Equal(t, int64(1), ts.Result)
@@ -346,7 +346,7 @@ func TestEngine_ComplexRule3(t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.Equal(t, int64(1), ts.Result)
@@ -385,7 +385,7 @@ func TestEngine_ComplexRule4(t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.Equal(t, int64(1), ts.Result)
@@ -416,7 +416,7 @@ func TestEngine_OperatorPrecedence(t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.Equal(t, int64(3), ts.Result)
@@ -465,7 +465,7 @@ And another`
 	assert.False(t, es.Result2)
 
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 	assert.NoError(t, err)
 
 	assert.True(t, es.Result1)
@@ -715,7 +715,7 @@ func TestGruleEngine_Follows_logical_operator_precedence(t *testing.T) {
 
 	//When
 	engine := NewGruleEngine()
-	err = engine.Execute(dctx, kb)
+	err = engine.Execute(dctx, kb, nil, nil)
 
 	//Then
 	assert.NoError(t, err)

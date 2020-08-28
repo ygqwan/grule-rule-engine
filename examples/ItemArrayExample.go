@@ -83,7 +83,7 @@ func (cf *ItemPriceChecker) CheckPrices() {
 		if err != nil {
 			panic(err)
 		}
-		err = eng.Execute(dctx, kb)
+		err = eng.Execute(dctx, kb, nil, nil)
 		if err != nil {
 			panic(err)
 		}
@@ -166,7 +166,7 @@ func (cf *ItemPriceChecker) CheckCart() {
 	if err != nil {
 		panic(err)
 	}
-	err = eng.Execute(dctx, kb)
+	err = eng.Execute(dctx, kb, nil, nil)
 	if err != nil {
 		panic(err)
 	}

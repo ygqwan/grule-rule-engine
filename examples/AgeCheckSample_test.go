@@ -56,7 +56,7 @@ func TestMyPoGo_GetStringLength(t *testing.T) {
 	} else {
 		kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 		eng1 := &engine.GruleEngine{MaxCycle: 1}
-		err := eng1.Execute(dataContext, kb)
+		err := eng1.Execute(dataContext, kb, nil, nil)
 		if err != nil {
 			t.Fatalf("Got error %v", err)
 		} else {
@@ -91,7 +91,7 @@ func TestMyPoGo_Compare(t *testing.T) {
 	} else {
 		kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
 		eng1 := &engine.GruleEngine{MaxCycle: 100}
-		err := eng1.Execute(dataContext, kb)
+		err := eng1.Execute(dataContext, kb, nil, nil)
 		if err != nil {
 			t.Fatalf("Got error %v", err)
 		} else {

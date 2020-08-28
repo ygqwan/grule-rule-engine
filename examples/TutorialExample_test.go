@@ -61,7 +61,7 @@ rule CheckValues "Check the default values" salience 10 {
 	knowledgeBase := knowledgeLibrary.NewKnowledgeBaseInstance("Tutorial", "0.0.1")
 
 	engine := engine.NewGruleEngine()
-	err = engine.Execute(dataCtx, knowledgeBase)
+	err = engine.Execute(dataCtx, knowledgeBase, nil, nil)
 	if err != nil {
 		panic(err)
 	}

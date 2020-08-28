@@ -120,7 +120,7 @@ func TestSalience(t *testing.T) {
 			panic(err)
 		}
 
-		err = engine.Execute(dataCtx, knowledgeBase)
+		err = engine.Execute(dataCtx, knowledgeBase, nil, nil)
 		if err != nil {
 			panic(err)
 		}

@@ -52,7 +52,7 @@ func TestMethodCall_Issue5(t *testing.T) {
 	} else {
 		eng1 := &engine.GruleEngine{MaxCycle: 5}
 		kb := lib.NewKnowledgeBaseInstance("Test", "0.1.1")
-		err := eng1.Execute(dataContext, kb)
+		err := eng1.Execute(dataContext, kb, nil, nil)
 		if err != nil {
 			t.Fatal(err)
 		}

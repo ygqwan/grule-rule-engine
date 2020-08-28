@@ -21,7 +21,7 @@ var (
 )
 
 type AfterExecuteCallBack func()
-
+type EvaluateErrorCallBack func(ruleName string)
 // NewGruleEngine will create new instance of GruleEngine struct.
 // It will set the max cycle to 5000
 func NewGruleEngine() *GruleEngine {
@@ -36,14 +36,14 @@ type GruleEngine struct {
 }
 
 // Execute function is the same as ExecuteWithContext(context.Background())
-func (g *GruleEngine) Execute(dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack ...AfterExecuteCallBack) error {
-	return g.ExecuteWithContext(context.Background(), dataCtx, knowledge, afterExecuteCallBack...)
+func (g *GruleEngine) Execute(dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack AfterExecuteCallBack, evaluateErrorCallBack EvaluateErrorCallBack) error {
+	return g.ExecuteWithContext(context.Background(), dataCtx, knowledge, afterExecuteCallBack, evaluateErrorCallBack)
 }
 
 // ExecuteWithContext function will execute a knowledge evaluation and action against data context.
 // The engine will evaluate context cancelation status in each cycle.
 // The engine also do conflict resolution of which rule to execute.
-func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack ...AfterExecuteCallBack) error {
+func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataContext, knowledge *ast.KnowledgeBase, afterExecuteCallBack AfterExecuteCallBack, evaluateErrorCallBack EvaluateErrorCallBack) error {
 	RuleEnginePublisher := eventbus.DefaultBrooker.GetPublisher(events.RuleEngineEventTopic)
 	RuleEntryPublisher := eventbus.DefaultBrooker.GetPublisher(events.RuleEntryEventTopic)
 
@@ -126,10 +126,13 @@ func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataC
 		// Select all rule entry that can be executed.
 		log.Tracef("Select all rule entry that can be executed.")
 		runnable := make([]*ast.RuleEntry, 0)
-		for _, v := range knowledge.RuleEntries {
+		for ruleName, v := range knowledge.RuleEntries {
 			// test if this rule entry v can execute.
 			can, err := v.Evaluate()
 			if err != nil {
+				if evaluateErrorCallBack != nil {
+					evaluateErrorCallBack(ruleName)
+				}
 				log.Errorf("Failed testing condition for rule : %s. Got error %v", v.Name, err)
 				// No longer return error, since unavailability of variable or fact in context might be intentional.
 			}
@@ -175,8 +178,8 @@ func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataC
 					EventType: events.RuleEntryExecuteEndEvent,
 					RuleName:  r.Name,
 				})
-				for _, f := range afterExecuteCallBack {
-					f()
+				if afterExecuteCallBack != nil {
+					afterExecuteCallBack()
 				}
 				if dataCtx.IsComplete() {
 					cycleDone = true

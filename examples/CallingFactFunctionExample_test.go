@@ -78,7 +78,7 @@ func TestCallingFactFunction(t *testing.T) {
 		panic(err)
 	} else {
 		eng1 := &engine.GruleEngine{MaxCycle: 500}
-		err := eng1.Execute(dataContext, knowledgeBase)
+		err := eng1.Execute(dataContext, knowledgeBase, nil, nil)
 		if err != nil {
 			t.Fatalf("Got error %v", err)
 		}

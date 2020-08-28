@@ -105,7 +105,7 @@ func beginThread(threadName string, lib *ast.KnowledgeLibrary, t *testing.T) {
 	kb := lib.NewKnowledgeBaseInstance("VibonaciTest", "0.0.1")
 
 	// Execute the KnowledgeBase against DataContext
-	err = engine.Execute(dataContext, kb)
+	err = engine.Execute(dataContext, kb, nil, nil)
 	if err != nil {
 		t.Fatalf("Engine execution error on thread %s, got %s", threadName, err)
 	}
