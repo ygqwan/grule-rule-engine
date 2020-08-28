@@ -21,7 +21,7 @@ var (
 )
 
 type AfterExecuteCallBack func()
-type EvaluateErrorCallBack func(ruleName string)
+type EvaluateErrorCallBack func(ruleName string, err error)
 // NewGruleEngine will create new instance of GruleEngine struct.
 // It will set the max cycle to 5000
 func NewGruleEngine() *GruleEngine {
@@ -131,7 +131,7 @@ func (g *GruleEngine) ExecuteWithContext(ctx context.Context, dataCtx ast.IDataC
 			can, err := v.Evaluate()
 			if err != nil {
 				if evaluateErrorCallBack != nil {
-					evaluateErrorCallBack(ruleName)
+					evaluateErrorCallBack(ruleName, err)
 				}
 				log.Errorf("Failed testing condition for rule : %s. Got error %v", v.Name, err)
 				// No longer return error, since unavailability of variable or fact in context might be intentional.
